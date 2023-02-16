@@ -1,4 +1,4 @@
-package com.solvd.hospitalsystem;
+package com.solvd.citytransportationsystemproject;
 
 import java.io.IOException;
 import java.sql.Timestamp;
