@@ -1,4 +1,4 @@
-package com.solvd.hospitalsystem;
+package com.solvd.citytransportationsystemproject;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
