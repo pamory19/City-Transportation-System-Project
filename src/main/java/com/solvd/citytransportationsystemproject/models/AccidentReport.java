@@ -1,6 +1,7 @@
 package com.solvd.citytransportationsystemproject.models;
 
 import java.sql.Date;
+import java.util.Objects;
 
 public class AccidentReport extends Model {
     private Date date;
@@ -52,6 +53,25 @@ public class AccidentReport extends Model {
 		this.vehicleId = vehicleId;
 	}
 
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof AccidentReport))
+			return false;
+		AccidentReport that = (AccidentReport) o;
+		return getId() == that.getId() &&
+				Objects.equals(getDate(), that.getDate()) &&
+				Objects.equals(getDescription(), that.getDescription()) &&
+				getPersonId() == that.getPersonId() &&
+				getVehicleId() == that.getVehicleId();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId(), getDate(), getDescription(), getPersonId(), getVehicleId());
+	}
     
 }
 

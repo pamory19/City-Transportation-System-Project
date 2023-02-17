@@ -1,5 +1,7 @@
 package com.solvd.citytransportationsystemproject.models;
 
+import java.util.Objects;
+
 public class Train extends Vehicle {
     private String trainHeadcode;
     private long vehicleId;
@@ -30,6 +32,23 @@ public class Train extends Vehicle {
 		this.vehicleId = vehicleId;
 	}
 
-    
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Train))
+			return false;
+		Train train = (Train) obj;
+		return super.equals(train) &&
+				Objects.equals(trainHeadcode, train.trainHeadcode) &&
+				vehicleId == train.vehicleId;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), trainHeadcode, vehicleId);
+	}
+
 }
 
