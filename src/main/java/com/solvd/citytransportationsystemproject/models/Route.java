@@ -1,6 +1,7 @@
 package com.solvd.citytransportationsystemproject.models;
 
 import java.util.List;
+import java.util.Objects;
 
 public class Route extends Model {
 
@@ -33,6 +34,23 @@ public class Route extends Model {
 
 	public void setVehicleId(long vehicleId) {
 		this.vehicleId = vehicleId;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof Route))
+			return false;
+		Route route = (Route) obj;
+		return Objects.equals(name, route.name) &&
+				vehicleId == route.vehicleId &&
+				Objects.equals(stations, route.stations);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, vehicleId, stations);
 	}
 
 }
