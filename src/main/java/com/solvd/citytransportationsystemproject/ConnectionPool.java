@@ -2,6 +2,8 @@ package com.solvd.citytransportationsystemproject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -12,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ConnectionPool {
-    final static Logger logger = LogManager.getLogger(Runner.class.getName());
+    final static Logger logger = LogManager.getLogger(ConnectionPool.class);
 
     private static ConnectionPool instance;
     private static final int MAX_CONNECTIONS = 10;
@@ -24,10 +26,7 @@ public class ConnectionPool {
     public ConnectionPool() {
         Properties prop = new Properties();
         try {
-            prop.load(new FileInputStream(
-                    "C:\\Users\\House Games\\eclipse-workspace\\citytransportationsystemproject\\src\\main\\resources\\properties\\config.properties"));
-        } catch (FileNotFoundException e) {
-            logger.info(e);
+            prop.load(Files.newInputStream(Paths.get("/Users/parisamory/Documents/development/City-Transportation-System-Project/src/main/resources/config.properties")));
         } catch (IOException e) {
             logger.info(e);
         }

@@ -1,5 +1,7 @@
 package com.solvd.citytransportationsystemproject.models;
 
+import java.util.Objects;
+
 public class Passenger extends Person {
 	
     private int numberOfRides;
@@ -31,5 +33,22 @@ public class Passenger extends Person {
 
     public void setPersonId(long personId) {
         this.personId = personId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+        if (!super.equals(o))
+            return false;
+        Passenger passenger = (Passenger) o;
+        return numberOfRides == passenger.numberOfRides && personId == passenger.personId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), numberOfRides, personId);
     }
 }

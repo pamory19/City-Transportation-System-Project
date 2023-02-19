@@ -1,5 +1,7 @@
 package com.solvd.citytransportationsystemproject.models;
 
+import java.util.Objects;
+
 public class Ticket extends Model {
     private String paymentMethod;
     private float fare;
@@ -40,5 +42,21 @@ public class Ticket extends Model {
 		this.passengerId = passengerId;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Ticket))
+			return false;
+		Ticket ticket = (Ticket) obj;
+		return Float.compare(ticket.fare, fare) == 0 &&
+				passengerId == ticket.passengerId &&
+				Objects.equals(paymentMethod, ticket.paymentMethod);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(paymentMethod, fare, passengerId);
+	}
     
 }

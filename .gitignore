@@ -7,6 +7,7 @@ logs/
 /shelf/
 /workspace.xml
 .DS_Store
+city-transportation-system-project.iml
 
 # Log file
 *.log

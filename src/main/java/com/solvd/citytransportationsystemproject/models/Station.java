@@ -1,5 +1,7 @@
 package com.solvd.citytransportationsystemproject.models;
 
+import java.util.Objects;
+
 public class Station extends Model {
     private String name;
     private String type;
@@ -50,5 +52,24 @@ public class Station extends Model {
 		this.routeId = routeId;
 	}
 
-    
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof Station))
+			return false;
+		Station station = (Station) obj;
+		return Objects.equals(name, station.name) &&
+				Objects.equals(type, station.type) &&
+				Objects.equals(address, station.address) &&
+				routeId == station.routeId;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, type, address, routeId);
+	}
+
+
 }

@@ -1,5 +1,7 @@
 package com.solvd.citytransportationsystemproject.models;
 
+import java.util.Objects;
+
 public class Person extends Model{
 	
     private String firstName;
@@ -61,4 +63,24 @@ public class Person extends Model{
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this)
+            return true;
+        if (!(obj instanceof Person))
+            return false;
+        Person person = (Person) obj;
+        return Objects.equals(firstName, person.firstName) &&
+                Objects.equals(lastName, person.lastName) &&
+                Objects.equals(address, person.address) &&
+                Objects.equals(phoneNumber, person.phoneNumber) &&
+                Objects.equals(email, person.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, address, phoneNumber, email);
+    }
+
 }
