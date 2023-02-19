@@ -1,4 +1,4 @@
-package com.solvd.citytransportationsystemproject;
+package com.solvd.citytransportationsystemproject.dao;
 
 public interface IBaseDao<T> {
     T getEntityById(long id);

@@ -1,6 +1,5 @@
 package com.solvd.citytransportationsystemproject.dao;
 
-import com.solvd.citytransportationsystemproject.IBaseDao;
 import com.solvd.citytransportationsystemproject.models.Passenger;
 
 import java.util.List;
