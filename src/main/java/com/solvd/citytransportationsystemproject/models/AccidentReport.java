@@ -1,12 +1,36 @@
 package com.solvd.citytransportationsystemproject.models;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+
 import java.sql.Date;
-import java.util.Objects;
+
+@JsonRootName("AccidentReport")
+@XmlRootElement(name = "AccidentReport")
+@XmlAccessorType(XmlAccessType.FIELD)
 
 public class AccidentReport extends Model {
-    private Date date;
-    private String description;
-    private long personId;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@JsonProperty("date")
+	@XmlElement
+	private Date date;
+    
+	@JsonProperty("description")
+    @XmlElement
+	private String description;
+	
+	@JsonProperty("personID")
+    @XmlElement
+	private long personId;
+	
+	@JsonProperty("vehicleID")
+    @XmlElement
     private long vehicleId;
     
     public AccidentReport() {
@@ -53,25 +77,6 @@ public class AccidentReport extends Model {
 		this.vehicleId = vehicleId;
 	}
 
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (!(o instanceof AccidentReport))
-			return false;
-		AccidentReport that = (AccidentReport) o;
-		return getId() == that.getId() &&
-				Objects.equals(getDate(), that.getDate()) &&
-				Objects.equals(getDescription(), that.getDescription()) &&
-				getPersonId() == that.getPersonId() &&
-				getVehicleId() == that.getVehicleId();
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(getId(), getDate(), getDescription(), getPersonId(), getVehicleId());
-	}
     
 }
 

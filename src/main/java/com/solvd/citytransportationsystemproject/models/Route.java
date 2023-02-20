@@ -1,12 +1,31 @@
 package com.solvd.citytransportationsystemproject.models;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+
+@JsonRootName("Route")
+@XmlRootElement(name = "Route")
+@XmlAccessorType(XmlAccessType.FIELD)
+
 import java.util.List;
-import java.util.Objects;
 
 public class Route extends Model {
 
+	@JsonProperty("name")
+    @XmlElement
 	private String name;
+	
+	@JsonProperty("vehicleID")
+    @XmlElement
 	private long vehicleId;
+	
+	@JsonProperty("stations")
+    @XmlElement
 	private List<Station> stations;
 	
 	public Route() {
@@ -34,23 +53,6 @@ public class Route extends Model {
 
 	public void setVehicleId(long vehicleId) {
 		this.vehicleId = vehicleId;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == this)
-			return true;
-		if (!(obj instanceof Route))
-			return false;
-		Route route = (Route) obj;
-		return Objects.equals(name, route.name) &&
-				vehicleId == route.vehicleId &&
-				Objects.equals(stations, route.stations);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(name, vehicleId, stations);
 	}
 
 }

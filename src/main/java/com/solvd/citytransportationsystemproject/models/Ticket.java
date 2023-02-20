@@ -1,10 +1,29 @@
 package com.solvd.citytransportationsystemproject.models;
 
-import java.util.Objects;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
+
+@JsonRootName("Ticket")
+@XmlRootElement(name = "Ticket")
+@XmlAccessorType(XmlAccessType.FIELD)
 
 public class Ticket extends Model {
+	
+	@JsonProperty("paymentMethod")
+    @XmlElement
     private String paymentMethod;
+	
+	@JsonProperty("fare")
+    @XmlElement
     private float fare;
+	
+	@JsonProperty("passengerId")
+    @XmlElement
     private long passengerId;
     
     public Ticket() {
@@ -42,21 +61,5 @@ public class Ticket extends Model {
 		this.passengerId = passengerId;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!(obj instanceof Ticket))
-			return false;
-		Ticket ticket = (Ticket) obj;
-		return Float.compare(ticket.fare, fare) == 0 &&
-				passengerId == ticket.passengerId &&
-				Objects.equals(paymentMethod, ticket.paymentMethod);
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(paymentMethod, fare, passengerId);
-	}
     
 }
