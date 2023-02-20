@@ -1,5 +1,7 @@
 package com.solvd.citytransportationsystemproject.models;
 
+import java.util.Objects;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -61,5 +63,20 @@ public class Ticket extends Model {
 		this.passengerId = passengerId;
 	}
 
-    
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Ticket))
+			return false;
+		Ticket ticket = (Ticket) obj;
+		return Float.compare(ticket.fare, fare) == 0 &&
+				passengerId == ticket.passengerId &&
+				Objects.equals(paymentMethod, ticket.paymentMethod);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(paymentMethod, fare, passengerId);
+	}
 }

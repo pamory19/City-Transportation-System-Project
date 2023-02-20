@@ -5,10 +5,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
 
 import java.sql.Date;
+import java.util.Objects;
 
 @JsonRootName("AccidentReport")
 @XmlRootElement(name = "AccidentReport")
@@ -25,11 +27,11 @@ public class AccidentReport extends Model {
     @XmlElement
 	private String description;
 	
-	@JsonProperty("personID")
+	@JsonProperty("personId")
     @XmlElement
 	private long personId;
 	
-	@JsonProperty("vehicleID")
+	@JsonProperty("vehicleId")
     @XmlElement
     private long vehicleId;
     
@@ -77,6 +79,23 @@ public class AccidentReport extends Model {
 		this.vehicleId = vehicleId;
 	}
 
-    
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (!(o instanceof AccidentReport))
+			return false;
+		AccidentReport that = (AccidentReport) o;
+		return getId() == that.getId() &&
+				Objects.equals(getDate(), that.getDate()) &&
+				Objects.equals(getDescription(), that.getDescription()) &&
+				getPersonId() == that.getPersonId() &&
+				getVehicleId() == that.getVehicleId();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(getId(), getDate(), getDescription(), getPersonId(), getVehicleId());
+	}
 }
 

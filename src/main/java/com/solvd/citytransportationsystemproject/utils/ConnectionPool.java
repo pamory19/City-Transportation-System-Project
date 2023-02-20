@@ -1,4 +1,4 @@
-package com.solvd.citytransportationsystemproject;
+package com.solvd.citytransportationsystemproject.utils;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;

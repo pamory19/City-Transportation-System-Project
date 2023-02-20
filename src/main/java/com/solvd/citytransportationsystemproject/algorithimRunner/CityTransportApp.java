@@ -3,6 +3,9 @@ package com.solvd.citytransportationsystemproject.algorithimRunner;
 import java.util.*;
 import java.util.logging.Logger;
 
+import com.solvd.citytransportationsystemproject.models.Station;
+import com.solvd.citytransportationsystemproject.utils.Parser;
+
 public class CityTransportApp {
     static Logger logger = Logger.getLogger(CityTransportApp.class.getName());
     private static final int INFINITY = Integer.MAX_VALUE;
@@ -12,6 +15,8 @@ public class CityTransportApp {
 
     // The main method of the application where user input and program execution happens
     public static void main(String[] args) {
+    	
+
         CityTransportApp cityTransportation = new CityTransportApp();
         cityTransportation.initializeStations();
         cityTransportation.initializeGraph();
@@ -25,19 +30,35 @@ public class CityTransportApp {
 
     // Initializes the stations with their names and indices
     private void initializeStations() {
-        stations = new ArrayList<>();
+    	/*
+    	    Parser parser = new Parser();
+    	    List<Station> stationList = parser.parseXML("stations.xml");
+    	    stations = new ArrayList<Station>();
+    	    for (Station station : stationList) {
+    	        stations.add(station);
+    	    }
+    	}
+    	*/
+    	
+        stations = new ArrayList<Station>();
         stations.add(new Station("A", 0));
         stations.add(new Station("B", 1));
         stations.add(new Station("C", 2));
         stations.add(new Station("D", 3));
         stations.add(new Station("E", 4));
         stations.add(new Station("F", 5));
+        
     }
 
     // Initializes the graph representing the connections between stations
     private void initializeGraph() {
-        graph = new int[][]{{0, 5, INFINITY, INFINITY, 10, INFINITY}, {5, 0, 4, INFINITY, INFINITY, INFINITY},
-                {INFINITY, 4, 0, 3, INFINITY, INFINITY}, {INFINITY, INFINITY, 3, 0, 5, INFINITY}, {10, INFINITY, INFINITY, 5, 0, INFINITY},{INFINITY, INFINITY, INFINITY,INFINITY, INFINITY, 0}};
+        graph = new int[][]{
+        	{0, 5, INFINITY, INFINITY, 10, INFINITY}, 
+        	{5, 0, 4, INFINITY, INFINITY, INFINITY},
+        	{INFINITY, 4, 0, INFINITY, INFINITY, INFINITY}, 
+        	{INFINITY, INFINITY, INFINITY, 0, 5, INFINITY}, 
+        	{10, INFINITY, 3, 5, 0, INFINITY},
+        	{INFINITY, INFINITY, INFINITY,INFINITY, INFINITY, 0}};
     }
 
     // Finds the shortest path between the start and end locations
@@ -125,25 +146,4 @@ public class CityTransportApp {
         logger.info("The total distance is " + distances[endIndex] + ".");
     }
 
-    // A class representing a station in the city transportation system
-    static class Station {
-        private String name;
-        private int index;
-
-        // Constructor for the Station class
-        public Station(String name, int index) {
-            this.name = name;
-            this.index = index;
-        }
-
-        // Getter method for the name of the station
-        public String getName() {
-            return name;
-        }
-
-        // Getter method for the index of the station
-        public int getIndex() {
-            return index;
-        }
-    }
 }

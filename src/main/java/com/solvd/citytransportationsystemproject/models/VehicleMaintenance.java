@@ -5,14 +5,18 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+
+import java.sql.Date;
+import java.util.Objects;
+
 
 @JsonRootName("VehicleMaintenance")
 @XmlRootElement(name = "VehicleMaintenance")
 @XmlAccessorType(XmlAccessType.FIELD)
 
-import java.sql.Date;
 
 public class VehicleMaintenance extends Model {
 	
@@ -77,5 +81,23 @@ public class VehicleMaintenance extends Model {
 		this.vehicleId = vehicleId;
 	}
 
-    
+	@Override
+	public boolean equals(Object o) {
+		if (o == this)
+			return true;
+		if (!(o instanceof VehicleMaintenance)) {
+			return false;
+		}
+		VehicleMaintenance maintenance = (VehicleMaintenance) o;
+		return this.getId() == maintenance.getId() &&
+				this.date.equals(maintenance.getDate()) &&
+				this.type.equals(maintenance.getType()) &&
+				this.description.equals(maintenance.getDescription()) &&
+				this.vehicleId == maintenance.getVehicleId();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(this.getId(), this.date, this.type, this.description, this.vehicleId);
+	}
 }

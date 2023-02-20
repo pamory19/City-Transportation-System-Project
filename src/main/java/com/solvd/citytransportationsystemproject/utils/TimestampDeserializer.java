@@ -1,4 +1,4 @@
-package com.solvd.citytransportationsystemproject;
+package com.solvd.citytransportationsystemproject.utils;
 
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -13,10 +13,9 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.solvd.hospitalsystem.dao.mysql.AppointmentDiagnosisDAO;
 
 public class TimestampDeserializer extends JsonDeserializer<Timestamp> {
-	final Logger logger = LogManager.getLogger(AppointmentDiagnosisDAO.class.getName());
+	final Logger logger = LogManager.getLogger(TimestampDeserializer.class.getName());
 
 	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 

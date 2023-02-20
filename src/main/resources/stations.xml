@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Stations>
+  <Station id="0" name="A" />
+  <Station id="1" name="B" />
+  <Station id="2" name="C" />
+  <Station id="3" name="D" />
+  <Station id="4" name="E" />
+  <Station id="5" name="F" />
+</Stations>
