@@ -1,4 +1,4 @@
-package com.solvd.citytransportationsystemproject.service;
+package com.solvd.citytransportationsystemproject.services;
 
 import com.solvd.citytransportationsystemproject.dao.ITrainDao;
 import com.solvd.citytransportationsystemproject.dao.mysql.TrainDao;

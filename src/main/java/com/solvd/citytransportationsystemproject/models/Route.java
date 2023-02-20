@@ -7,12 +7,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRootName;
+import java.util.List;
+import java.util.Objects;
 
 @JsonRootName("Route")
 @XmlRootElement(name = "Route")
 @XmlAccessorType(XmlAccessType.FIELD)
-
-import java.util.List;
 
 public class Route extends Model {
 
@@ -55,4 +55,29 @@ public class Route extends Model {
 		this.vehicleId = vehicleId;
 	}
 
+
+	public List<Station> getStations() {
+		return stations;
+	}
+
+	public void setStations(List<Station> stations) {
+		this.stations = stations;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof Route))
+			return false;
+		Route route = (Route) obj;
+		return Objects.equals(name, route.name) &&
+				vehicleId == route.vehicleId &&
+				Objects.equals(stations, route.stations);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, vehicleId, stations);
+	}
 }

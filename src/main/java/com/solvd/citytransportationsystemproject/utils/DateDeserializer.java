@@ -1,4 +1,4 @@
-package main.java.com.solvd.CityTransportation;
+package com.solvd.citytransportationsystemproject.utils;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -12,9 +12,10 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
-import com.solvd.hospitalsystem.Dao.mysql.AppointmentDiagnosisDao;
 
 public class DateDeserializer extends StdDeserializer<Date> {
+	
+    private final Logger logger = LogManager.getLogger(DateDeserializer.class);
 
 	private SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 

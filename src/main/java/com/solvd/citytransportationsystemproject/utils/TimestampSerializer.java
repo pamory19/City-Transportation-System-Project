@@ -1,4 +1,4 @@
-package com.solvd.citytransportationsystemproject;
+package com.solvd.citytransportationsystemproject.utils;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;

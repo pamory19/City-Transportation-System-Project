@@ -1,4 +1,4 @@
-package main.java.com.solvd.CityTransportation;
+package com.solvd.citytransportationsystemproject.utils;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;

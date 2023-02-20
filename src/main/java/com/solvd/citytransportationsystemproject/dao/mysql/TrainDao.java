@@ -1,8 +1,9 @@
 package com.solvd.citytransportationsystemproject.dao.mysql;
 
-import com.solvd.citytransportationsystemproject.ConnectionPool;
 import com.solvd.citytransportationsystemproject.dao.ITrainDao;
 import com.solvd.citytransportationsystemproject.models.Train;
+import com.solvd.citytransportationsystemproject.utils.ConnectionPool;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

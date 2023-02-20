@@ -1,4 +1,4 @@
-package main.java.com.solvd.CityTransportation;
+package com.solvd.citytransportationsystemproject.utils;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.text.SimpleDateFormat;

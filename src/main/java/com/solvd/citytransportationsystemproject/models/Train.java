@@ -1,5 +1,7 @@
 package com.solvd.citytransportationsystemproject.models;
 
+import java.util.Objects;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -47,7 +49,22 @@ public class Train extends Vehicle {
 	public void setVehicleId(long vehicleId) {
 		this.vehicleId = vehicleId;
 	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!(obj instanceof Train))
+			return false;
+		Train train = (Train) obj;
+		return super.equals(train) &&
+				Objects.equals(trainHeadcode, train.trainHeadcode) &&
+				vehicleId == train.vehicleId;
+	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), trainHeadcode, vehicleId);
+	}
     
 }
 

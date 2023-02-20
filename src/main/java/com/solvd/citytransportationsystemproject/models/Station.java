@@ -1,5 +1,7 @@
 package com.solvd.citytransportationsystemproject.models;
 
+import java.util.Objects;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -26,9 +28,11 @@ public class Station extends Model {
     @XmlElement
     private String address;
 	
-	@JsonProperty("routeID")
+	@JsonProperty("routeId")
     @XmlElement
     private long routeId;
+	
+	private int index;
     
     public Station() {
 		super();
@@ -41,6 +45,11 @@ public class Station extends Model {
         this.address = address;
         this.routeId = routeId;
     }
+
+	public Station(String name, int index) {
+        this.name = name;
+        this.index = index;
+	}
 
 	public String getName() {
 		return name;
@@ -74,5 +83,22 @@ public class Station extends Model {
 		this.routeId = routeId;
 	}
 
-    
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == this)
+			return true;
+		if (!(obj instanceof Station))
+			return false;
+		Station station = (Station) obj;
+		return Objects.equals(name, station.name) &&
+				Objects.equals(type, station.type) &&
+				Objects.equals(address, station.address) &&
+				routeId == station.routeId;
+	}
+
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(name, type, address, routeId);
+	}
 }
