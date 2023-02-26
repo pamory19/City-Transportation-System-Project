@@ -14,16 +14,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VehicleMaintenanceDao extends MySQLDao<VehicleMaintenance> implements IVehicleMaintenance {
-    private static final Logger logger = LogManager.getLogger(VehicleMaintenance.class);
+    private static final Logger LOGGER = LogManager.getLogger(VehicleMaintenance.class);
+    private static final String CREATE_ENTITY_SQL = "INSERT INTO VehicleMaintenance (id, date, type, description, vehicle_id) VALUES (?, ?, ?, ?, ?)";
+    private static final String GET_ENTITY_BY_ID_SQL = "SELECT * FROM VehicleMaintenance WHERE id = ?";
+    private static final String UPDATE_ENTITY_SQL = "UPDATE VehicleMaintenance SET date = ?, type = ?, description = ?, vehicle_id = ? WHERE id = ?";
+    private static final String DELETE_ENTITY_SQL = "DELETE FROM VehicleMaintenance WHERE id = ?";
+    private static final String GET_ENTITY_BY_TYPE_SQL = "SELECT * FROM VehicleMaintenance WHERE type = ?";
+    private static final String GET_ALL_ENTITIES_SQL = "SELECT * FROM VehicleMaintenance";
 
     @Override
     public VehicleMaintenance createEntity(VehicleMaintenance entity){
-        String sql = "INSERT INTO VehicleMaintenance (id, date, type, description, vehicle_id) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement statement = null;
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(CREATE_ENTITY_SQL);
             statement.setLong(1, entity.getId());
             statement.setDate(2, entity.getDate());
             statement.setString(3, entity.getType());
@@ -31,18 +36,10 @@ public class VehicleMaintenanceDao extends MySQLDao<VehicleMaintenance> implemen
             statement.setLong(5, entity.getVehicleId());
             statement.executeUpdate();
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return entity;
     }
@@ -50,33 +47,22 @@ public class VehicleMaintenanceDao extends MySQLDao<VehicleMaintenance> implemen
 
     @Override
     public VehicleMaintenance getEntityById(long id){
-        String sql = "SELECT * FROM VehicleMaintenance WHERE id = ?";
         PreparedStatement statement = null;
         Connection connection = null;
         VehicleMaintenance vehicleMaintenance = null;
         ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(GET_ENTITY_BY_ID_SQL);
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
             vehicleMaintenance = resultSetToObject(resultSet);
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            closeResource(resultSet);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return vehicleMaintenance;
     }
@@ -84,12 +70,11 @@ public class VehicleMaintenanceDao extends MySQLDao<VehicleMaintenance> implemen
 
     @Override
     public void updateEntity(VehicleMaintenance entity){
-        String sql = "UPDATE VehicleMaintenance SET date = ?, type = ?, description = ?, vehicle_id = ? WHERE id = ?";
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(UPDATE_ENTITY_SQL);
             statement.setDate(1, entity.getDate());
             statement.setString(2, entity.getType());
             statement.setString(3, entity.getDescription());
@@ -97,77 +82,49 @@ public class VehicleMaintenanceDao extends MySQLDao<VehicleMaintenance> implemen
             statement.setLong(5, entity.getId());
             statement.executeUpdate();
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
 
     @Override
     public void deleteEntity(long id){
-        String sql = "DELETE FROM VehicleMaintenance WHERE id = ?";
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(DELETE_ENTITY_SQL);
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
     @Override
     public VehicleMaintenance getVehicleMaintenanceByType(String type){
-        String sql = "SELECT * FROM VehicleMaintenance WHERE type = ?";
         PreparedStatement statement = null;
         Connection connection = null;
         VehicleMaintenance vehicleMaintenance = null;
         ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(GET_ENTITY_BY_TYPE_SQL);
             statement.setString(1, type);
             resultSet = statement.executeQuery();
             vehicleMaintenance = resultSetToObject(resultSet);
         } catch (Exception e){
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            closeResource(resultSet);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return vehicleMaintenance;
     }
@@ -175,14 +132,13 @@ public class VehicleMaintenanceDao extends MySQLDao<VehicleMaintenance> implemen
 
     @Override
     public List<VehicleMaintenance> getAllVehicleMaintenances(){
-        String sql = "SELECT * FROM VehicleMaintenance";
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         List<VehicleMaintenance> vehicleMaintenanceList = new ArrayList<>();
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(GET_ALL_ENTITIES_SQL);
             resultSet = statement.executeQuery();
             while (resultSet.next()){
                 VehicleMaintenance vehicleMaintenance = new VehicleMaintenance();
@@ -194,21 +150,11 @@ public class VehicleMaintenanceDao extends MySQLDao<VehicleMaintenance> implemen
                 vehicleMaintenanceList.add(vehicleMaintenance);
             }
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            closeResource(resultSet);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return vehicleMaintenanceList;
     }
@@ -227,7 +173,7 @@ public class VehicleMaintenanceDao extends MySQLDao<VehicleMaintenance> implemen
                 vehicleMaintenance.setVehicleId(resultSet.getLong("vehicle_id"));
             }
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         }
         return vehicleMaintenance;
     }

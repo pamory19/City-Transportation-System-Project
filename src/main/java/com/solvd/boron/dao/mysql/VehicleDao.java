@@ -14,17 +14,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VehicleDao extends MySQLDao<Vehicle> implements IVehicleDao {
-    private static final Logger logger = LogManager.getLogger(VehicleDao.class);
+    private static final Logger LOGGER = LogManager.getLogger(VehicleDao.class);
+    private static final String CREATE_ENTITY_SQL = "INSERT INTO Vehicle (id, make, model, year, capacity, driver_id) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String GET_ENTITY_BY_ID_SQL = "SELECT * FROM Vehicle WHERE id = ?";
+    private static final String UPDATE_ENTITY_SQL = "UPDATE Vehicle SET make = ?, model = ?, year = ?, capacity = ?, driver_id = ? WHERE id = ?";
+    private static final String DELETE_ENTITY_SQL = "DELETE FROM Vehicle WHERE id = ?";
+    private static final String GET_ENTITY_BY_DRIVER_ID_SQL = "SELECT * FROM Vehicle WHERE driver_id = ?";
+    private static final String GET_ALL_ENTITIES_SQL = "SELECT * FROM Vehicle";
 
 
     @Override
     public Vehicle createEntity(Vehicle entity){
-        String sql = "INSERT INTO Vehicle (id, make, model, year, capacity, driver_id) VALUES (?, ?, ?, ?, ?, ?)";
         PreparedStatement statement = null;
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(CREATE_ENTITY_SQL);
             statement.setLong(1, entity.getId());
             statement.setString(2, entity.getMake());
             statement.setString(3, entity.getModel());
@@ -33,18 +38,10 @@ public class VehicleDao extends MySQLDao<Vehicle> implements IVehicleDao {
             statement.setLong(6, entity.getDriverId());
             statement.executeUpdate();
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return entity;
     }
@@ -52,33 +49,22 @@ public class VehicleDao extends MySQLDao<Vehicle> implements IVehicleDao {
 
     @Override
     public Vehicle getEntityById(long id){
-        String sql = "SELECT * FROM Vehicle WHERE id = ?";
         PreparedStatement statement = null;
         Connection connection = null;
         Vehicle vehicle = null;
         ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(GET_ENTITY_BY_ID_SQL);
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
             vehicle = resultSetToObject(resultSet);
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            closeResource(resultSet);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return vehicle;
     }
@@ -86,12 +72,11 @@ public class VehicleDao extends MySQLDao<Vehicle> implements IVehicleDao {
 
     @Override
     public void updateEntity(Vehicle entity){
-        String sql = "UPDATE Vehicle SET make = ?, model = ?, year = ?, capacity = ?, driver_id = ? WHERE id = ?";
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(UPDATE_ENTITY_SQL);
             statement.setString(1, entity.getMake());
             statement.setString(2, entity.getModel());
             statement.setInt(3, entity.getYear());
@@ -100,91 +85,62 @@ public class VehicleDao extends MySQLDao<Vehicle> implements IVehicleDao {
             statement.setLong(6, entity.getId());
             statement.executeUpdate();
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
 
     @Override
     public void deleteEntity(long id){
-        String sql = "DELETE FROM Vehicle WHERE id = ?";
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(DELETE_ENTITY_SQL);
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
     @Override
     public Vehicle getVehicleByDriverId(long driverId){
-        String sql = "SELECT * FROM Vehicle WHERE driver_id = ?";
         PreparedStatement statement = null;
         Connection connection = null;
         Vehicle vehicle = null;
         ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(GET_ENTITY_BY_DRIVER_ID_SQL);
             statement.setLong(1, driverId);
             resultSet = statement.executeQuery();
             vehicle = resultSetToObject(resultSet);
         } catch (Exception e){
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            closeResource(resultSet);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return vehicle;
     }
 
     @Override
     public List<Vehicle> getAllVehicles(){
-        String sql = "SELECT * FROM Vehicle";
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         List<Vehicle> vehicles = new ArrayList<>();
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(GET_ALL_ENTITIES_SQL);
             resultSet = statement.executeQuery();
             while (resultSet.next()){
                 Vehicle vehicle = new Vehicle();
@@ -197,21 +153,11 @@ public class VehicleDao extends MySQLDao<Vehicle> implements IVehicleDao {
                 vehicles.add(vehicle);
             }
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            closeResource(resultSet);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return vehicles;
     }
@@ -231,7 +177,7 @@ public class VehicleDao extends MySQLDao<Vehicle> implements IVehicleDao {
                 vehicle.setDriverId(resultSet.getLong("driver_id"));
             }
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         }
         return vehicle;
     }

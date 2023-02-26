@@ -14,33 +14,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PassengerDao extends MySQLDao<Passenger> implements IPassengerDao {
-    private static final Logger logger = LogManager.getLogger(PassengerDao.class);
+    private static final Logger LOGGER = LogManager.getLogger(PassengerDao.class);
+    private static final String CREATE_ENTITY_SQL = "INSERT INTO Passenger (id, number_of_rides, person_id) VALUES (?, ?, ?)";
+    private static final String GET_ENTITY_BY_ID_SQL = "SELECT * FROM Passenger WHERE id = ?";
+    private static final String UPDATE_ENTITY_SQL = "UPDATE Passenger SET number_of_rides = ?, person_id = ? WHERE id = ?";
+    private static final String DELETE_ENTITY_SQL = "DELETE FROM Passenger WHERE id = ?";
+    private static final String GET_ENTITY_BY_PERSON_ID_SQL = "SELECT * FROM Passenger WHERE person_id = ?";
+    private static final String GET_ALL_ENTITIES_SQL = "SELECT * FROM Passenger";
 
     @Override
     public Passenger createEntity(Passenger entity){
-        String sql = "INSERT INTO Passenger (id, number_of_rides, person_id) VALUES (?, ?, ?)";
         PreparedStatement statement = null;
         Connection connection = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(CREATE_ENTITY_SQL);
             statement.setLong(1, entity.getId());
             statement.setInt(2, entity.getNumberOfRides());
             statement.setLong(3, entity.getPersonId());
             statement.executeUpdate();
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return entity;
     }
@@ -48,33 +45,22 @@ public class PassengerDao extends MySQLDao<Passenger> implements IPassengerDao {
 
     @Override
     public Passenger getEntityById(long id){
-        String sql = "SELECT * FROM Passenger WHERE id = ?";
         PreparedStatement statement = null;
         Connection connection = null;
         Passenger passenger = null;
         ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(GET_ENTITY_BY_ID_SQL);
             statement.setLong(1, id);
             resultSet = statement.executeQuery();
             passenger = resultSetToObject(resultSet);
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            closeResource(resultSet);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return passenger;
     }
@@ -82,101 +68,71 @@ public class PassengerDao extends MySQLDao<Passenger> implements IPassengerDao {
 
     @Override
     public void updateEntity(Passenger entity){
-        String sql = "UPDATE Passenger SET number_of_rides = ?, person_id = ? WHERE id = ?";
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(UPDATE_ENTITY_SQL);
             statement.setInt(1, entity.getNumberOfRides());
             statement.setLong(2, entity.getPersonId());
             statement.setLong(3, entity.getId());
             statement.executeUpdate();
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
 
     @Override
     public void deleteEntity(long id){
-        String sql = "DELETE FROM Passenger WHERE id = ?";
         Connection connection = null;
         PreparedStatement statement = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(DELETE_ENTITY_SQL);
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
     }
 
     public Passenger getPassengerByPersonId(long personId){
-        String sql = "SELECT * FROM Passenger WHERE person_id = ?";
         PreparedStatement statement = null;
         Connection connection = null;
         Passenger passenger = null;
         ResultSet resultSet = null;
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(GET_ENTITY_BY_PERSON_ID_SQL);
             statement.setLong(1, personId);
             resultSet = statement.executeQuery();
             passenger = resultSetToObject(resultSet);
         } catch (Exception e){
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            closeResource(resultSet);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return passenger;
     }
 
     @Override
     public List<Passenger> getAllPassengers(){
-        String sql = "SELECT * FROM Passenger";
         Connection connection = null;
         PreparedStatement statement = null;
         ResultSet resultSet = null;
         List<Passenger> passengers = new ArrayList<>();
         try {
             connection = ConnectionPool.getInstance().getConnection();
-            statement = connection.prepareStatement(sql);
+            statement = connection.prepareStatement(GET_ALL_ENTITIES_SQL);
             resultSet = statement.executeQuery();
             while (resultSet.next()){
                 Passenger passenger = new Passenger();
@@ -186,21 +142,11 @@ public class PassengerDao extends MySQLDao<Passenger> implements IPassengerDao {
                 passengers.add(passenger);
             }
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         } finally {
-            try {
-                if (resultSet != null) {
-                    resultSet.close();
-                }
-                if (statement != null) {
-                    statement.close();
-                }
-                if (connection != null) {
-                    ConnectionPool.getInstance().releaseConnection(connection);
-                }
-            } catch (Exception e) {
-                logger.info(e);
-            }
+            closeResource(statement);
+            closeResource(resultSet);
+            ConnectionPool.getInstance().releaseConnection(connection);
         }
         return passengers;
     }
@@ -217,7 +163,7 @@ public class PassengerDao extends MySQLDao<Passenger> implements IPassengerDao {
                 passenger.setPersonId(resultSet.getLong("person_id"));
             }
         } catch (Exception e) {
-            logger.info(e);
+            LOGGER.info(e);
         }
         return passenger;
     }

@@ -14,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class ConnectionPool {
-    final static Logger logger = LogManager.getLogger(ConnectionPool.class);
+    final static Logger LOGGER = LogManager.getLogger(ConnectionPool.class);
 
     private static ConnectionPool instance;
     private static final int MAX_CONNECTIONS = 10;
@@ -28,7 +28,7 @@ public class ConnectionPool {
         try {
             prop.load(Files.newInputStream(Paths.get("/Users/parisamory/Documents/development/City-Transportation-System-Project/src/main/resources/config.properties")));
         } catch (IOException e) {
-            logger.info(e);
+            LOGGER.info(e);
         }
         this.url = prop.getProperty("db.url");
         this.username = prop.getProperty("db.username");
@@ -38,7 +38,7 @@ public class ConnectionPool {
             try {
                 availableConnections.add(DriverManager.getConnection(url, username, password));
             } catch (SQLException e) {
-                logger.info(e);
+                LOGGER.info(e);
             }
         }
     }
@@ -50,12 +50,24 @@ public class ConnectionPool {
         return instance;
     }
 
-    public java.sql.Connection getConnection() throws InterruptedException {
-        return availableConnections.take();
+    public java.sql.Connection getConnection() {
+        try {
+            return availableConnections.take();
+        } catch (InterruptedException e) {
+            LOGGER.info(e);
+            throw new IllegalStateException("Failed to get a connection", e);
+        }
     }
 
-    public void releaseConnection(java.sql.Connection connection) throws InterruptedException {
-        availableConnections.put(connection);
+
+    public void releaseConnection(java.sql.Connection connection) {
+        if (connection != null){
+            try{
+                availableConnections.put(connection);
+            } catch (InterruptedException e){
+                LOGGER.info(e);
+            }
+        }
     }
 
 }
